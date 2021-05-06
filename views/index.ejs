@@ -1,0 +1,137 @@
+<%- include('partials/header'); -%>
+  <div class="row">
+    <!--Display all entries in Menu Sections. -->
+    <div class="column">
+      <table>
+        <th><p class="column-title">Menu Sections</p></th>
+        <th><button type="button" class="add" id="1" onclick="displayForm(this.id)">Add</button></th>    
+        <%
+          if(typeof menuSections != 'undefined'){
+            if(menuSections.length!=0){
+              var i=1;
+              menuSections.forEach(function(data1){
+        %>
+        <tr>
+          <td  class="<%= selectedMenu == data1.ID ? 'highlight' : ''  %>"><a href="/displayItems/<%=data1.ID %>"><%=data1.Name %></a></td>
+          <td>
+            <input type="image" src="/images/edit-icon.png"  alt="Update" onclick="updateMenu(this.id, '<%=data1.ID%>','<%=data1.Name %>', '<%= data1.Description %>')" class="update <%= selectedMenu == data1.ID ? 'show' : ''  %>" id="4" width="16" height="16">
+            <form action="/deleteMenu/<%= data1.ID %>?_method=DELETE" method="POST" class="del">
+              <input type="image" src="/images/delete-icon.png" alt="Delete" class="delete <%= selectedMenu == data1.ID ? 'show' : ''  %>" width="16" height="16">
+            </form>
+          </td>
+        </tr>
+        <%  i++; }) %>
+        <% } else{ %>
+        <tr>
+          <td colspan="2">No Menu Sections Found</td>
+        </tr>
+        <% }} %>
+      </table>
+  	</div>
+    <!--Display all entries in Items. -->
+  	<div class="column">
+      <table>
+        <th><p class="column-title">Items</p></th>
+    		<th><button type="button" class="add <%= selectedMenu == 0 ? 'hidden' : ''%>" id="2" onclick="displayForm(this.id)">Add</button></th>
+        <%
+          if(typeof itemData != 'undefined'){
+            if(itemData.length!=0){
+              var i=1;
+              itemData.forEach(function(data2){
+        %>
+        <tr>
+          <td class="<%= selectedItem == data2.Item_ID ? 'highlight' : ''   %>"><a href="/displayModifiers/<%=data2.Item_ID %>"><%=data2.Name %></a></td>
+          <td>
+            <input type="image" src="/images/edit-icon.png"  alt="Update" onclick="updateItem(this.id, '<%=data2.Item_ID%>','<%=data2.Name %>', '<%= data2.Price %>','<%= data2.Description %>')" class="update <%= selectedItem == data2.Item_ID ? 'show' : ''  %>" id="5" width="16" height="16">
+            <form action="/deleteItem/<%= data2.Item_ID %>?_method=DELETE" method="POST" class="del">
+              <input type="image" src="/images/delete-icon.png" alt="Delete" class="delete <%= selectedItem == data2.Item_ID ? 'show' : ''  %>" width="16" height="16">
+            </form>
+          </td>
+
+        </tr>
+        <%  i++; }) %>
+        <% } else{ %>
+        <tr>
+          <td colspan="2">No Item Found in this Menu Section</td>
+        </tr>
+        <% }} %>
+      </table>
+  	</div>
+    <!--Display all entries in Modifiers. -->
+  	<div class="column">
+  		  <table>
+        <th><p class="column-title">Modifications</p></th>
+  		  <th><button type="button" class="add <%= selectedItem == 0 ? 'hidden' : ''%>" id="3" onclick="displayForm(this.id)">Add</button></th>
+        <%
+          if(typeof modifierData != 'undefined'){
+            if(modifierData.length!=0){
+              var i=1;
+              modifierData.forEach(function(data3){
+        %>
+        <tr>
+          <td class="<%= selectedModifier == data3.Modifier_ID ? 'highlight' : ''   %>"><a href="/selectedModifiers/<%=data3.Modifier_ID %>"><%=data3.Description %></a></td>
+          <td>
+            <input type="image" src="/images/edit-icon.png"  alt="Update" onclick="updateModifier(this.id, '<%=data3.Modifier_ID%>', '<%= data3.Description %>')" class="update <%= selectedModifier == data3.Modifier_ID ? 'show' : ''  %>" id="6" width="16" height="16">
+            <form action="/deleteModifier/<%= data3.Modifier_ID %>?_method=DELETE" method="POST" class="del">
+              <input type="image" src="/images/delete-icon.png" alt="Delete" class="delete <%= selectedModifier == data3.Modifier_ID ? 'show' : ''  %>" width="16" height="16">
+            </form>
+          </td>
+        </tr>
+        <%  i++; }) %>
+        <% } else{ %>
+        <tr>
+          <td colspan="2">No Modification found for this Item</td>
+        </tr>
+        <% }} %>
+      </table>
+  	</div>
+	</div><br/>
+  <!--Form to add entry in Menu Sections. -->
+  <form action="/addMenu" style="display: none;" method=POST id="form1">
+      <div class="form-group1">
+        Enter Menu Section Name: <input type="text" name="menu_section_name" id="ms_name" class="form-control" required/><br/><br/>
+        Enter Menu Section Description: <input type="text" name="menu_section_description" id="ms_des" class="form-control"/> 
+      </div>  
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    <!--Form to add entry in Items in a selected Menu Section. -->
+    <form action="/addItem" style="display: none;" method=POST id="form2">
+      <div class="form-group2">
+        Enter Item Name: <input type="text" name="item_name" id="i_name" class="form-control" required/><br/><br/>
+        Enter Item Price: <input type="number" name="item_price" id="i_price" class="form-control" required/><br/><br/>
+        Enter Item Description: <input type="text" name="item_description" id="i_des" class="form-control"/> 
+      </div>  
+     <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    <!--Form to add entry in Modifiers in a selected Item. -->
+    <form action="/addModifier" style="display: none;"  method=POST id="form3">
+      <div class="form-group3">
+        Enter Modifier Name: <input type="text" name="modifier_name" id="mo_name" class="form-control" required/><br/><br/>
+      </div>  
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    <!--Form to update entry in Menu Sections. -->
+    <form action="" method="POST" style="display : none;" id="form4">
+      <div class="form-group4">
+        Update Menu Section Name: <input type="text" name="menu_section_name" id="ms_name_u" class="form-control" required/><br/><br/>
+        Update Menu Section Description: <input type="text" name="menu_section_description" id="ms_des_u" class="form-control"> 
+      </div>  
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    <!--Form to update entry in Items in a selected Menu Section. -->
+    <form action="" method="POST" style="display : none;" id="form5">
+      <div class="form-group5">
+        Enter Item Name: <input type="text" name="item_name" id="i_name_u" class="form-control" required/><br/><br/>
+        Enter Item Price: <input type="number" name="item_price" id="i_price_u" class="form-control" required/><br/><br/>
+        Enter Item Description: <input type="text" name="item_description" id="i_des_u" class="form-control"/>  
+      </div>  
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    <!--Form to update entry in Modifiers in a selected Item. -->
+    <form action="/updateModifier" style="display: none;"  method=POST id="form6">
+      <div class="form-group6">
+        Update Modifier Name: <input type="text" name="modifier_name" id="mo_name_u" class="form-control" required/><br/><br/>
+      </div>  
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+<%- include('partials/footer'); -%>
