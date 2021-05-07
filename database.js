@@ -4,7 +4,7 @@ var mysql = require('mysql');
 var conn = mysql.createConnection({
 	host: 'localhost',
 	user: 'root',
-	password: 'Petals.1103',
+	password: '', //Enter Password
 	database: 'menu',
 	multipleStatements: true
 });
